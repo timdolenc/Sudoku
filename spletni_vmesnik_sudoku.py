@@ -23,7 +23,7 @@ except FileNotFoundError:
     
 @bottle.get('/')
 def osnovna_stran():
-    return bottle.template("osnovna_stran_za_spreminjat.tpl", sudokuseznam=sud, rešitev=res, napake = st_napak, score=točke, cajt = čas)
+    return bottle.template("osnovna_stran_za_spreminjat.tpl", sudokuseznam=sud, rešitev=res, napake = st_napak, score=točke)
 
 
 @bottle.get('/dodaj/')
