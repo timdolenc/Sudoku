@@ -1,6 +1,5 @@
 import bottle
 import os
-from primeri import primer1, primer2
 from sudoku_koncni import reševanje, rešitev, preberi_iz_datoteke, shrani_v_datoteko
 from generator2 import generiraj
 import time
