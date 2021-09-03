@@ -1,4 +1,4 @@
-from primeri import primer1
+
 import copy
 import json
 
