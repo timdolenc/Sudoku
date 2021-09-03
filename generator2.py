@@ -1,5 +1,4 @@
 from sudoku_koncni import prazno_polje, ustrezno, reševanje, rešitev
-from primeri import primer1, dverešitvi
 import random
 import copy
 
