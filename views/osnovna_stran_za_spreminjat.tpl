@@ -124,7 +124,21 @@
           border-top: 4px solid;
       }
       
+      #canvasOkolje {
+        width: 100%;
+        position: absolute;
+        left: -30%;
+        top: 20%;
+      }
 
+      #myCanvas {
+        width: 100%;
+        height: 500px;
+        position: absolute;
+        left: 30%;
+        top: 20%;  
+      }
+      
 
     </style>
   </head>
@@ -241,5 +255,113 @@
           <div class="score">
             <h3>TOČKE: {{score}}</h3>
           </div>
+
+        
+        % zmaga = not nova_igra
+        % for vrstica in sudokuseznam:
+          % for stolpec in vrstica:
+            % if stolpec == 0:
+              % zmaga = False
+            % end
+          % end
+        % end
+
+
+        <div id="canvasOkolje">
+          <!-- <canvas id="myCanvas" width="2400" height="800"></canvas> -->
+        </div>
+        
+        <script>
+        let pitonska_zmaga = "{{zmaga}}";  // lahko je ali True ali False
+        if (pitonska_zmaga == "True") {
+          // vir za ognjemete: http://slicker.me/javascript/fireworks.htm
+          const max_fireworks = 5,
+            max_sparks = 50;
+          // let canvas = document.getElementById('canvasOkolje').getElementsByTagName('*')[0];
+          let canvas = document.createElement('canvas');
+          canvas.id = "myCanvas";
+          canvas.width = "2400";
+          canvas.height = "800";
+
+          let canvasOkolje = document.getElementById('canvasOkolje');
+          canvasOkolje.appendChild(canvas);
+
+          let context = canvas.getContext('2d');
+          let fireworks = [];
+          
+          for (let i = 0; i < max_fireworks; i++) {
+            let firework = {
+              sparks: []
+            };
+            for (let n = 0; n < max_sparks; n++) {
+              let spark = {
+                vx: Math.random() * 5 + .5,
+                vy: Math.random() * 5 + .5,
+                weight: Math.random() * .3 + .03,
+                red: Math.floor(Math.random() * 2),
+                green: Math.floor(Math.random() * 2),
+                blue: Math.floor(Math.random() * 2)
+              };
+              if (Math.random() > .5) spark.vx = -spark.vx;
+              if (Math.random() > .5) spark.vy = -spark.vy;
+              firework.sparks.push(spark);
+            }
+            fireworks.push(firework);
+            resetFirework(firework);
+          }
+          
+          function resetFirework(firework) {
+            firework.x = Math.floor(Math.random() * canvas.width);
+            firework.y = canvas.height;
+            firework.age = 0;
+            firework.phase = 'fly';
+          }
+          
+          function explode() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            fireworks.forEach((firework,index) => {
+              if (firework.phase == 'explode') {
+                firework.sparks.forEach((spark) => {
+                  for (let i = 0; i < 10; i++) {
+                    let trailAge = firework.age + i;
+                    let x = firework.x + spark.vx * trailAge;
+                    let y = firework.y + spark.vy * trailAge + spark.weight * trailAge * spark.weight * trailAge;
+                    let fade = i * 20 - firework.age * 2;
+                    let r = Math.floor(spark.red * fade);
+                    r = Math.max(Math.min(r, 255), 0);
+                    let g = Math.floor(spark.green * fade);
+                    g = Math.max(Math.min(g, 255), 0);
+                    let b = Math.floor(spark.blue * fade);
+                    b = Math.max(Math.min(b, 255), 0);
+                    let faktor = 1 / 100;
+                    let svetlost = (r + g + b) / 3 * faktor;
+                    context.beginPath();
+                    context.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ', ' + svetlost + ')';
+                    context.rect(x, y, 4, 4);
+                    context.fill();
+                  }
+                });
+                firework.age++;
+                if (firework.age > 100 && Math.random() < .05) {
+                  resetFirework(firework);
+                }
+              } else {
+                firework.y = firework.y - 10;
+                for (let spark = 0; spark < 15; spark++) {
+                  context.beginPath();
+                  context.fillStyle = 'rgba(' + index * 50 + ',' + spark * 17 + ',0,1)';
+                  context.rect(firework.x + Math.random() * spark - spark / 2, firework.y + spark * 4, 4, 4);
+                  context.fill();
+                }
+                if (Math.random() < .001 || firework.y < 200) firework.phase = 'explode';
+              }
+            });
+            
+            window.requestAnimationFrame(explode);
+          }
+
+          window.requestAnimationFrame(explode);
+        }
+        </script>
   </body>
 </html>
