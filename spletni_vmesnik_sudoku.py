@@ -21,9 +21,11 @@ except FileNotFoundError:
     st_napak = 0
     točke = 0
     
+nova_igra = True
+
 @bottle.get('/')
 def osnovna_stran():
-    return bottle.template("osnovna_stran_za_spreminjat.tpl", sudokuseznam=sud, rešitev=res, napake = st_napak, score=točke)
+    return bottle.template("osnovna_stran_za_spreminjat.tpl", sudokuseznam=sud, rešitev=res, napake=st_napak, score=točke, nova_igra=nova_igra)
 
 
 @bottle.get('/dodaj/')
@@ -46,29 +48,32 @@ def dodaj_st():
 
 @bottle.get('/nova-igra-1')
 def nova():
-    global sud, st_napak, res
+    global sud, st_napak, res, nova_igra
 
     sud = generiraj(1)
     res = rešitev(sud)
     st_napak = 0
+    nova_igra = False
     bottle.redirect('/')
 
 @bottle.get('/nova-igra-2')
 def nova():
-    global sud, st_napak, res
+    global sud, st_napak, res, nova_igra
 
     sud = generiraj(2)
     res = rešitev(sud)
     st_napak = 0
+    nova_igra = False
     bottle.redirect('/')
 
 @bottle.get('/nova-igra-3')
 def nova():
-    global sud, st_napak, res
+    global sud, st_napak, res, nova_igra
 
     sud = generiraj(3)
     res = rešitev(sud)
     st_napak = 0
+    nova_igra = False
     bottle.redirect('/')
 
 
