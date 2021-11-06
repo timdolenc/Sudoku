@@ -1,11 +1,14 @@
 import bottle
 import os
+from pathlib import Path
 from sudoku_koncni import reševanje, rešitev, preberi_iz_datoteke, shrani_v_datoteko
 from generator2 import generiraj
 
 
 
 bottle.TEMPLATE_PATH.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "views")))
+
+os.chdir(Path(__file__).parent)
 
 IME_DATOTEKE = 'stanje.json'
 try:
